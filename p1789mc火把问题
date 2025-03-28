@@ -1,0 +1,176 @@
+# P1789 【Mc生存】插火把
+
+## 题目描述
+
+话说有一天 linyorson 在“我的世界”开了一个 $n \times n$ 的方阵，现在他有 $m$ 个火把和 $k$ 个萤石，分别放在 $(x_1, y_1) \sim (x_m, y_m)$ 和 $(o_1, p_1) \sim (o_k, p_k)$ 的位置，没有光并且没放东西的地方会生成怪物。请问在这个方阵中有几个点会生成怪物？
+
+P.S. 火把的照亮范围是：
+
+```
+    |暗|暗| 光 |暗|暗|
+    |暗|光| 光 |光|暗|
+    |光|光|火把|光|光|
+    |暗|光| 光 |光|暗|
+    |暗|暗| 光 |暗|暗|
+```
+
+萤石：
+
+```
+    |光|光| 光 |光|光|
+    |光|光| 光 |光|光|
+    |光|光|萤石|光|光|
+    |光|光| 光 |光|光|
+    |光|光| 光 |光|光|
+```
+
+## 输入格式
+
+输入共 $m + k + 1$ 行。  
+第一行为 $n, m, k$。  
+第 $2$ 到第 $m + 1$ 行分别是火把的位置 $x_i, y_i$。  
+第 $m + 2$ 到第 $m + k + 1$ 行分别是萤石的位置 $o_i, p_i$。
+
+注：可能没有萤石，但一定有火把。
+
+## 输出格式
+
+有几个点会生出怪物。
+
+## 输入输出样例 #1
+
+### 输入 #1
+
+```
+5 1 0
+3 3
+```
+
+### 输出 #1
+
+```
+12
+```
+
+## 说明/提示
+
+数据保证，$1 \le n \le 100$，$1 \leq m+k \leq 25$，$1 \leq m \leq 25$，$0 \leq k \leq 5$。
+
+
+#include<iostream>
+#include"string"
+using namespace std;
+#include<vector>
+
+//制作一个二级数组0代表暗，1代表亮/有物品
+
+//vector容器的使用
+//1.push_back尾插，pop_back()尾删法
+//2.用iterator当迭代器，
+//3.区间方式构造vector<int>v2(v1.begin(),v1.end());将v1的开始到结束区间给v2初始化
+//4.vector<int>v2(int m,int n);m个n将其初始化
+//5.vector<int>v2(v1)拷贝构造（常用）
+//6.=重参或者用assign（v1.begin（），v1.end（））赋值
+//7.判断容器是否为空返回类型bool，empty（）；
+//8.capacity返回int代表容量
+//9.size返回int代表元素个数
+//10.resize（int num）将容器元素个数变为num超出的末尾删除，少的用默认参数替代
+//11.resize（int num，ele）这次少了用ele替代
+//12.insert（iterator it，ele）向迭代器指向位置插入ele
+//13.insert（iterator it，int m，int n）迭代器位置插入m个n
+//14.erase（iterator it）删除迭代器指向元素
+//15.clear（）；清空容器
+
+//火把点亮区域
+void fire_light(vector<vector<int>>&mc, int x1, int y1, int n)
+{
+	int x = x1 - 1, y = y1 - 1;
+	for (int i = x - 1; i <= x + 1; i++)
+	{
+		for (int j = y - 1; j <= y + 1; j++)
+		{
+			if (i >= 0 && j >= 0 && i < n && j < n)
+			{
+				mc[i][j]= 1;
+			}
+		}
+	}
+	if (x - 2 >= 0)
+		mc[x - 2][y] = 1;
+	if (y - 2 >= 0)
+		mc[x][y - 2] = 1;
+	if (x + 2 < n)
+		mc[x + 2][y] = 1;
+	if (y + 2 < n)
+		mc[x][y + 2] = 1;
+}
+//萤石点亮区域
+void sto_light(vector<vector<int>>& mc, int x1, int y1, int n)
+{
+	int x = x1 - 1, y = y1 - 1;
+	for (int i = x - 2; i <= x + 2; i++)
+	{
+		for (int j = y - 2; j <= j + 2; j++)
+		{
+			if (i >= 0 && j >= 0 && i < n && j < n)
+			{
+				mc[i][j] = 1;
+			}
+		}
+	}
+}
+
+int mon_num(vector<vector<int>>& mc, int n)
+{
+	int num = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (mc[i][j] == 0)
+			{
+				num++;
+			}
+		}
+	}
+	return num;
+}
+
+int main()
+{
+	int n, m, k;
+	cin >> n >> m >> k;
+	vector<vector<int>>mc(n, vector<int>(n, 0));
+	for (int i = 0; i < m; i++)
+	{
+		int x, y;
+		cin >> x >> y;
+		fire_light(mc, x, y, n);
+	}
+	for (int i = 0; i < k; i++)
+	{
+		int x, y;
+		cin >> x >> y;
+		sto_light(mc, x, y, n);
+	}
+	cout << mon_num(mc, n) << endl;
+
+
+
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

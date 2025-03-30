@@ -1,0 +1,55 @@
+第一版但是错了
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+int sum(int n)  // 计算阶乘
+{
+    if (n == 0 || n == 1) return 1;
+    return n * sum(n - 1);
+}
+
+// 获取 `len` 的首位
+int ini(int m, int n) {
+    return m / (int)pow(10, n - 1);
+}
+
+void sort_num(int len, int n, int &res, vector<bool> &used) 
+{
+    if (n == 1) return;  // 只有一位时，不需要处理
+
+    int first_digit = ini(len, n);  // 取出最高位
+    int remaining_digits = len % (int)pow(10, n - 1); // 去掉最高位后的剩余部分
+
+    // 计算在 `first_digit` 之前的所有未使用数字
+    int count = 0;
+    for (int i = 1; i < first_digit; i++) {
+        if (!used[i]) count++;
+    }
+
+    res += count * sum(n - 1); // 贡献计算
+    used[first_digit] = true;  // 标记当前位已使用
+
+    sort_num(remaining_digits, n - 1, res, used);
+}
+
+int main() {
+    int n, x;
+    cin >> n >> x;
+
+    // 计算 `x` 有几位
+    int len = 0, temp = x;
+    while (temp > 0) {
+        len++;
+        temp /= 10;
+    }
+
+    vector<bool> used(n + 1, false); // 记录已使用的数字
+    int res = 1; // 结果
+    sort_num(x, len, res, used);
+    cout << res << endl;
+
+    return 0;
+}

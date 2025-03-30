@@ -1,4 +1,11 @@
-第一版但是错了
+
+
+/*收获：正确使用递归，考虑数字是否重复使用
+
+
+
+
+
 #include <iostream>
 #include <vector>
 #include <cmath>

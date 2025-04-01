@@ -1,0 +1,122 @@
+# P1002 [NOIP 2002 普及组] 过河卒
+
+#include<iostream>
+#include<vector>
+#include<cmath>
+using namespace std;
+
+bool is_get[30][30];//判断此点是否能到达
+
+
+int main()
+{
+	int x, y, mx, my;
+	cin >> x >> y >> mx >> my;
+	x += 2;
+	y += 2;
+	mx += 2;
+	my += 2;
+
+
+
+	for (int i = 0; i < 30; i++)
+		for (int j = 0; j < 30; j++)
+		{
+			is_get[i][j] = true;
+		}
+	is_get[mx - 2][my - 1] = false;
+	is_get[mx - 2][my +1] = false;
+	is_get[mx +2][my - 1] = false;
+	is_get[mx + 2][my + 1] = false;
+	is_get[mx - 1][my + 2] = false;
+	is_get[mx - 1][my - 2] = false;
+	is_get[mx + 1][my - 2] = false;
+	is_get[mx + 1][my +2] = false;//马拦住的点
+	is_get[mx][my] = false;
+	vector<vector<long long>>dp(25, vector<long long>(25, 0));
+	dp[2][2] = 1;
+
+
+	for (int i = 2; i <= x; i++)
+	{
+		for (int j = 2; j <= y; j++)
+		{
+			if (is_get[i][j])
+			{
+				if (i - 1 >= 2)
+					dp[i][j] += dp[i - 1][j];
+				if (j - 1 >= 2)
+					dp[i][j] += dp[i][j - 1];
+			}
+			else
+			{
+				dp[i][j] = 0;
+			}
+		}
+	}
+
+	cout << dp[x][y] << endl;
+
+
+
+	return 0;
+}
+
+
+
+//简单动态规划问题，一个二维数组代表每个点到达的条数，一个数组代表是否能到达，考虑边界值及越界风险
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 题目描述
+
+棋盘上 $A$ 点有一个过河卒，需要走到目标 $B$ 点。卒行走的规则：可以向下、或者向右。同时在棋盘上 $C$ 点有一个对方的马，该马所在的点和所有跳跃一步可达的点称为对方马的控制点。因此称之为“马拦过河卒”。
+
+棋盘用坐标表示，$A$ 点 $(0, 0)$、$B$ 点 $(n, m)$，同样马的位置坐标是需要给出的。
+
+![](https://cdn.luogu.com.cn/upload/image_hosting/ipmwl52i.png)
+
+现在要求你计算出卒从 $A$ 点能够到达 $B$ 点的路径的条数，假设马的位置是固定不动的，并不是卒走一步马走一步。
+
+## 输入格式
+
+一行四个正整数，分别表示 $B$ 点坐标和马的坐标。
+
+## 输出格式
+
+一个整数，表示所有的路径条数。
+
+## 输入输出样例 #1
+
+### 输入 #1
+
+```
+6 6 3 3
+```
+
+### 输出 #1
+
+```
+6
+```
+
+## 说明/提示
+
+对于 $100 \%$ 的数据，$1 \le n, m \le 20$，$0 \le$ 马的坐标 $\le 20$。
+
+**【题目来源】**
+
+NOIP 2002 普及组第四题
